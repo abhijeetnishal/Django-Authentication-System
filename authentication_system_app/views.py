@@ -1,14 +1,14 @@
-from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 import json
 from django.contrib.auth.hashers import make_password, check_password
 from .models import User
 
-
 @csrf_exempt
 def signup(request):
+    # try-except for error handling
     try:
+        # Check for request method
         if request.method == 'POST':
             # Check if the request has a JSON payload
             if request.content_type == 'application/json':
@@ -38,7 +38,7 @@ def signup(request):
                     user = User(username=username, email=email, password=hashed_password)
                     user.save()
 
-                    return JsonResponse({"message": f"User saved to DB: {user}"}, status=200)
+                    return JsonResponse({"message": f"User saved to DB"}, status=200)
             else:
                 return JsonResponse({"error": "Request must be in JSON format"}, status=400)
 
@@ -46,5 +46,4 @@ def signup(request):
             return JsonResponse({"error": "Invalid HTTP request method"}, status=500)
         
     except Exception as e:
-        print(f"Exception: {e}")
-        return JsonResponse({"error": str(e)}, status=500)
+        return JsonResponse({"error": "Internal server error"}, status=500)
