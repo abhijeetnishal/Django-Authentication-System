@@ -38,12 +38,49 @@ def signup(request):
                     user = User(username=username, email=email, password=hashed_password)
                     user.save()
 
-                    return JsonResponse({"message": f"User saved to DB"}, status=200)
+                    return JsonResponse({"message": f"User saved to DB"}, status=201)
             else:
                 return JsonResponse({"error": "Request must be in JSON format"}, status=400)
 
         else:
             return JsonResponse({"error": "Invalid HTTP request method"}, status=500)
         
+    except Exception as e:
+        return JsonResponse({"error": "Internal server error"}, status=500)
+
+
+@csrf_exempt
+def login(request):
+    try:
+        if request.method == 'POST':
+            if request.content_type == 'application/json':
+                # Parse JSON data from the request body
+                data = json.loads(request.body)
+
+                # Extract email and password from data
+                email, password = data['email'], data['password']
+
+                # Validate Input
+                if (not email or len(email) == 0) or (not password or len(password) == 0):
+                    return JsonResponse({"error": "Enter required details"}, status=400)
+                else:
+                    # Retrieve user based on username or email
+                    userExists = User.objects.filter(email=email).first() 
+
+                    # Check user registered or not
+                    if userExists == None:
+                        return JsonResponse({"error": "User not registered"}, status=404)
+                    else:
+                        # Check if the provided password matches the stored hashed password
+                        if not check_password(password, userExists.password):
+                            return JsonResponse({"error": "Incorrect password"}, status=401)
+                        else:
+                            return JsonResponse({"message": "User logged in"}, status=200)
+
+            else:
+                return JsonResponse({"error" : "Request must be in JSON format"}, status=400)
+        else:
+            return JsonResponse({"error": "Invalid HTTP request method"}, status= 500)
+
     except Exception as e:
         return JsonResponse({"error": "Internal server error"}, status=500)
