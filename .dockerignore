@@ -1,0 +1,38 @@
+# Ignore common version control files and directories
+.git
+.gitignore
+.vscode
+.idea
+
+# Ignore Python-related files
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+
+# Ignore Django-specific files
+*.pyc
+*.pyo
+*.pyd
+*.sqlite3
+
+# Ignore Docker-related files and directories
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# Ignore development and local files
+*.log
+*.db
+*.env
+*.env.local
+
+# Ignore miscellaneous files
+*.pyproj
+*.DS_Store
+*.pyc
+*.pyo
+*.pyd
+*.db.sqlite3
+*.sqlite3-journal
+*.pytest_cache

@@ -3,6 +3,9 @@ from django.http import JsonResponse
 import json
 from django.contrib.auth.hashers import make_password, check_password
 from .models import User
+import logging
+
+logger = logging.getLogger(__name__)
 
 @csrf_exempt
 def signup(request):
@@ -46,6 +49,7 @@ def signup(request):
             return JsonResponse({"error": "Invalid HTTP request method"}, status=500)
         
     except Exception as e:
+        logger.error(f"An error occurred: {e}")
         return JsonResponse({"error": "Internal server error"}, status=500)
 
 
@@ -83,4 +87,5 @@ def login(request):
             return JsonResponse({"error": "Invalid HTTP request method"}, status= 500)
 
     except Exception as e:
+        logger.error(f"An error occurred: {e}")
         return JsonResponse({"error": "Internal server error"}, status=500)
